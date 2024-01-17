@@ -1,15 +1,10 @@
 extends Node
 
 var time_elapsed = 0.0
-var distanceToScreenEdge = 0
-var muzzlePosition
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
-	muzzlePosition = $PlayerCharacter/Sprite2D/Muzzle.position
-	
+func _ready():	
 	$PlayerCharacter.position = $StartPosition.position
-	distanceToScreenEdge = muzzlePosition.distance_to($Edge.position)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
