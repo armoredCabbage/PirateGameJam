@@ -1,0 +1,64 @@
+[gd_scene load_steps=8 format=3 uid="uid://dn6mystbuc8td"]
+
+[ext_resource type="Script" path="res://levels/Scene01.gd" id="1_kft2a"]
+[ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="2_ym44g"]
+[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://icon.svg" id="3_bba31"]
+[ext_resource type="Texture2D" uid="uid://cl2phbffrqjbh" path="res://target_placeholder.png" id="4_vmdjj"]
+[ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="5_harac"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ijtae"]
+size = Vector2(128, 128.681)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8p56y"]
+size = Vector2(18, 14)
+
+[node name="Scene02" type="Node"]
+script = ExtResource("1_kft2a")
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("2_ym44g")]
+position = Vector2(-74, -2)
+scale = Vector2(0.388099, 0.388099)
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(29, 81)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 35.0
+offset_top = 10.0
+offset_right = 75.0
+offset_bottom = 33.0
+scale = Vector2(2.39657, 0.766295)
+
+[node name="Seconds" type="Label" parent="."]
+offset_left = 41.0
+offset_top = 37.0
+offset_right = 81.0
+offset_bottom = 60.0
+scale = Vector2(1.50757, 0.597462)
+
+[node name="Block" type="Area2D" parent="." groups=["mountains"]]
+position = Vector2(166, 31)
+scale = Vector2(0.268504, 0.469468)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Block"]
+scale = Vector2(1.1875, 1.46875)
+shape = SubResource("RectangleShape2D_ijtae")
+
+[node name="Sprite2D" type="Sprite2D" parent="Block"]
+scale = Vector2(1.1875, 1.46875)
+texture = ExtResource("3_bba31")
+
+[node name="Target" type="Area2D" parent="."]
+position = Vector2(240, 67)
+scale = Vector2(0.766716, 0.766716)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Target"]
+shape = SubResource("RectangleShape2D_8p56y")
+
+[node name="Sprite2D" type="Sprite2D" parent="Target"]
+texture = ExtResource("4_vmdjj")
+
+[node name="WinScreen" parent="." instance=ExtResource("5_harac")]
+visible = false
+
+[connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
