@@ -17,7 +17,7 @@ func _process(delta):
 
 func _shoot(timeElapsed):
 	
-	var projectile = preload("res://bullet.tscn").instantiate()
+	var projectile = preload("res://bullet_kinematic.tscn").instantiate()
 	var projectileTimer = projectile.get_child(2)
 	
 	owner.add_child(projectile)

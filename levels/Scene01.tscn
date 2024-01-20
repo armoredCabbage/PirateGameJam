@@ -36,7 +36,7 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Block" type="Area2D" parent="." groups=["mountains"]]
+[node name="Block" type="StaticBody2D" parent="." groups=["mountains"]]
 position = Vector2(210, 178)
 scale = Vector2(0.268504, 0.469468)
 
@@ -59,6 +59,7 @@ shape = SubResource("RectangleShape2D_8p56y")
 texture = ExtResource("4_jj6qk")
 
 [node name="WinScreen" parent="." instance=ExtResource("5_fk5o5")]
+process_mode = 2
 visible = false
 
-[connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]

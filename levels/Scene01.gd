@@ -6,7 +6,7 @@ var time_elapsed = 0.0
 func _ready():
 	$WinScreen.visible = false
 	$PlayerCharacter.position = $StartPosition.position
-	#$WinScreen/NextButton.connect(_on_next_button_pressed)
+	$WinScreen.connect("goToNextLevel", transitionToNextLevel)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -30,17 +30,15 @@ func _unhandled_input(event):
 	
 	if Input.is_action_pressed("fire"):
 		$Label.text = "Charging"
-	
-	#if NextButton._on_next_button_pressed():
-		#get_tree().change_scene("res://levels/Scene02.tscn")
 
 
-func _on_target_area_entered(area):
-	if area.is_in_group("projectile"):
-		area.queue_free()
+func transitionToNextLevel():
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://levels/Scene02.tscn")
+
+
+func _on_target_body_entered(body):
+	if body.is_in_group("projectile"):
+		body.queue_free()
 		get_tree().paused = true
 		$WinScreen.visible = true
-
-
-func _on_next_button_pressed():
-	get_tree().change_scene("res://levels/Scene02.tscn")

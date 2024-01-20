@@ -36,7 +36,7 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Block" type="Area2D" parent="." groups=["mountains"]]
+[node name="Block" type="StaticBody2D" parent="." groups=["mountains"]]
 position = Vector2(166, 31)
 scale = Vector2(0.268504, 0.469468)
 
@@ -62,3 +62,4 @@ texture = ExtResource("4_vmdjj")
 visible = false
 
 [connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
+[connection signal="goToNextLevel" from="WinScreen" to="." method="_on_win_screen_go_to_next_level"]
