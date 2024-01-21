@@ -36,7 +36,7 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Block" type="StaticBody2D" parent="." groups=["mountains"]]
+[node name="Block" type="StaticBody2D" parent="." groups=["blocks"]]
 position = Vector2(210, 178)
 scale = Vector2(0.268504, 0.469468)
 
@@ -45,6 +45,18 @@ scale = Vector2(1.1875, 1.46875)
 shape = SubResource("RectangleShape2D_ijtae")
 
 [node name="Sprite2D" type="Sprite2D" parent="Block"]
+scale = Vector2(1.1875, 1.46875)
+texture = ExtResource("3_p5qqm")
+
+[node name="Echo" type="StaticBody2D" parent="." groups=["echoes"]]
+position = Vector2(127, -15)
+scale = Vector2(0.268504, 0.469468)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Echo"]
+scale = Vector2(1.1875, 1.46875)
+shape = SubResource("RectangleShape2D_ijtae")
+
+[node name="Sprite2D" type="Sprite2D" parent="Echo"]
 scale = Vector2(1.1875, 1.46875)
 texture = ExtResource("3_p5qqm")
 

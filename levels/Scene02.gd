@@ -29,8 +29,4 @@ func _unhandled_input(event):
 		$Label.text = "Charging"
 
 
-func _on_target_area_entered(area):
-	if area.is_in_group("projectile"):
-		area.queue_free()
-		get_tree().paused = true
-		$WinScreen.visible = true
+

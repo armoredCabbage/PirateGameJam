@@ -39,6 +39,15 @@ func transitionToNextLevel():
 
 func _on_target_body_entered(body):
 	if body.is_in_group("projectile"):
-		body.queue_free()
-		get_tree().paused = true
-		$WinScreen.visible = true
+		winningScreen(body)
+
+
+func _on_target_area_entered(area):
+	if area.is_in_group("resonateWave"):
+		winningScreen(area)
+
+
+func winningScreen(object):
+	object.queue_free()
+	get_tree().paused = true
+	$WinScreen.visible = true

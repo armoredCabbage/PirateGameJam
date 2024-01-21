@@ -12,7 +12,14 @@ func _physics_process(delta):
 	
 	var collision = move_and_collide(velocity * delta)
 	if collision:
-		velocity = velocity.bounce(collision.get_normal())
+		var collider = collision.get_collider()
+		
+		if collider.is_in_group("blocks"):
+			queue_free()
+		if collider.is_in_group("echoes"):
+			velocity = velocity.bounce(collision.get_normal())
+		if collider.is_in_group("resonates"):
+			collider.spawnResonate()
 
 
 func _on_timer_timeout():
