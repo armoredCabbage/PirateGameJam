@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cay2hq2l1qlxh"]
+
+[ext_resource type="Script" path="res://resonateWave.gd" id="1_oy4w7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_q1xwn"]
+
+[node name="ResonateWave" type="Area2D" groups=["resonateWave"]]
+script = ExtResource("1_oy4w7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(3, 3)
+shape = SubResource("CircleShape2D_q1xwn")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Game Jam"
-run/main_scene="res://PlayerCharacter.tscn"
+run/main_scene="res://levels/Scene01.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="res://art/icon.svg"
 
 [display]
 

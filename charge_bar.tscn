@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbh7cdu1660ww"]
+
+[ext_resource type="Texture2D" uid="uid://bgmi8yr6mqjy8" path="res://art/BarBack.png" id="1_82uaa"]
+[ext_resource type="Texture2D" uid="uid://3i482dp22xae" path="res://art/BarFill.png" id="2_o683x"]
+[ext_resource type="Texture2D" uid="uid://cyjpaj165vfy2" path="res://art/BarFrameBlack.png" id="3_j7yub"]
+
+[node name="ChargeBar" type="Marker2D"]
+
+[node name="BarBack" type="Sprite2D" parent="."]
+texture = ExtResource("1_82uaa")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-25, 0)
+scale = Vector2(1e-05, 1)
+
+[node name="BarFill" type="Sprite2D" parent="Marker2D"]
+position = Vector2(25, 0)
+texture = ExtResource("2_o683x")
+
+[node name="BarFrameBlack" type="Sprite2D" parent="."]
+texture = ExtResource("3_j7yub")

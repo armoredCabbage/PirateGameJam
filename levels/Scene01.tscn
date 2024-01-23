@@ -1,16 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://cuqvtqmosn2t2"]
+[gd_scene load_steps=10 format=3 uid="uid://cuqvtqmosn2t2"]
 
 [ext_resource type="Script" path="res://levels/Scene01.gd" id="1_qcb2d"]
 [ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="2_41iot"]
-[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://icon.svg" id="3_p5qqm"]
-[ext_resource type="Texture2D" uid="uid://cl2phbffrqjbh" path="res://target_placeholder.png" id="4_jj6qk"]
+[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://art/icon.svg" id="3_p5qqm"]
+[ext_resource type="PackedScene" uid="uid://cv3eegrfmr52c" path="res://PlayerCharacterSprite.tscn" id="3_qcxk1"]
+[ext_resource type="Texture2D" uid="uid://bnjgu38r1b64h" path="res://art/TargetSprite.png" id="5_340fl"]
 [ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="5_fk5o5"]
+[ext_resource type="PackedScene" uid="uid://cbh7cdu1660ww" path="res://charge_bar.tscn" id="5_x8asn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ijtae"]
 size = Vector2(128, 128.681)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8p56y"]
-size = Vector2(18, 14)
+size = Vector2(20.8682, 20.8682)
 
 [node name="Scene01" type="Node"]
 script = ExtResource("1_qcb2d")
@@ -19,8 +21,13 @@ script = ExtResource("1_qcb2d")
 position = Vector2(-74, -2)
 scale = Vector2(0.388099, 0.388099)
 
+[node name="PlayerCharacterSprite" parent="." instance=ExtResource("3_qcxk1")]
+
 [node name="StartPosition" type="Marker2D" parent="."]
 position = Vector2(29, 81)
+
+[node name="ChargeBarStartPosition" type="Marker2D" parent="."]
+position = Vector2(29, 97)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 35.0
@@ -36,7 +43,7 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Block" type="Area2D" parent="." groups=["mountains"]]
+[node name="Block" type="StaticBody2D" parent="." groups=["blocks"]]
 position = Vector2(210, 178)
 scale = Vector2(0.268504, 0.469468)
 
@@ -48,7 +55,22 @@ shape = SubResource("RectangleShape2D_ijtae")
 scale = Vector2(1.1875, 1.46875)
 texture = ExtResource("3_p5qqm")
 
-[node name="Target" type="Area2D" parent="."]
+[node name="Echo" type="StaticBody2D" parent="." groups=["echoes"]]
+position = Vector2(127, -15)
+scale = Vector2(0.268504, 0.469468)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Echo"]
+scale = Vector2(1.1875, 1.46875)
+shape = SubResource("RectangleShape2D_ijtae")
+
+[node name="Sprite2D" type="Sprite2D" parent="Echo"]
+scale = Vector2(1.1875, 1.46875)
+texture = ExtResource("3_p5qqm")
+
+[node name="ChargeBar" parent="." instance=ExtResource("5_x8asn")]
+scale = Vector2(0.5, 0.5)
+
+[node name="Target" type="Area2D" parent="." groups=["targets"]]
 position = Vector2(240, 67)
 scale = Vector2(0.766716, 0.766716)
 
@@ -56,9 +78,10 @@ scale = Vector2(0.766716, 0.766716)
 shape = SubResource("RectangleShape2D_8p56y")
 
 [node name="Sprite2D" type="Sprite2D" parent="Target"]
-texture = ExtResource("4_jj6qk")
+texture = ExtResource("5_340fl")
 
 [node name="WinScreen" parent="." instance=ExtResource("5_fk5o5")]
+process_mode = 2
 visible = false
 
-[connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]

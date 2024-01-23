@@ -1,16 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://dn6mystbuc8td"]
+[gd_scene load_steps=11 format=3 uid="uid://dn6mystbuc8td"]
 
 [ext_resource type="Script" path="res://levels/Scene01.gd" id="1_kft2a"]
 [ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="2_ym44g"]
-[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://icon.svg" id="3_bba31"]
-[ext_resource type="Texture2D" uid="uid://cl2phbffrqjbh" path="res://target_placeholder.png" id="4_vmdjj"]
+[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://art/icon.svg" id="3_bba31"]
+[ext_resource type="Script" path="res://levels/Resonate.gd" id="3_vv0xh"]
+[ext_resource type="Texture2D" uid="uid://bnjgu38r1b64h" path="res://art/TargetSprite.png" id="5_e4rs7"]
 [ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="5_harac"]
+[ext_resource type="PackedScene" uid="uid://cv3eegrfmr52c" path="res://PlayerCharacterSprite.tscn" id="7_wb6iw"]
+[ext_resource type="PackedScene" uid="uid://cbh7cdu1660ww" path="res://charge_bar.tscn" id="8_spivo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ijtae"]
 size = Vector2(128, 128.681)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8p56y"]
-size = Vector2(18, 14)
+size = Vector2(20.8682, 20.8682)
 
 [node name="Scene02" type="Node"]
 script = ExtResource("1_kft2a")
@@ -21,6 +24,9 @@ scale = Vector2(0.388099, 0.388099)
 
 [node name="StartPosition" type="Marker2D" parent="."]
 position = Vector2(29, 81)
+
+[node name="ChargeBarStartPosition" type="Marker2D" parent="."]
+position = Vector2(29, 97)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 35.0
@@ -36,15 +42,20 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Block" type="Area2D" parent="." groups=["mountains"]]
-position = Vector2(166, 31)
+[node name="Resonate" type="StaticBody2D" parent="." groups=["resonates"]]
+position = Vector2(178, 6)
 scale = Vector2(0.268504, 0.469468)
+script = ExtResource("3_vv0xh")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Block"]
+[node name="SpawnResonate" type="Marker2D" parent="Resonate"]
+position = Vector2(6.10352e-05, 83.0728)
+scale = Vector2(1.1875, 1.46875)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Resonate"]
 scale = Vector2(1.1875, 1.46875)
 shape = SubResource("RectangleShape2D_ijtae")
 
-[node name="Sprite2D" type="Sprite2D" parent="Block"]
+[node name="Sprite2D" type="Sprite2D" parent="Resonate"]
 scale = Vector2(1.1875, 1.46875)
 texture = ExtResource("3_bba31")
 
@@ -56,9 +67,16 @@ scale = Vector2(0.766716, 0.766716)
 shape = SubResource("RectangleShape2D_8p56y")
 
 [node name="Sprite2D" type="Sprite2D" parent="Target"]
-texture = ExtResource("4_vmdjj")
+texture = ExtResource("5_e4rs7")
 
 [node name="WinScreen" parent="." instance=ExtResource("5_harac")]
 visible = false
 
+[node name="PlayerCharacterSprite" parent="." instance=ExtResource("7_wb6iw")]
+
+[node name="ChargeBar" parent="." instance=ExtResource("8_spivo")]
+scale = Vector2(0.5, 0.5)
+
 [connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
+[connection signal="goToNextLevel" from="WinScreen" to="." method="_on_win_screen_go_to_next_level"]

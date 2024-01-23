@@ -17,7 +17,7 @@ func _process(delta):
 
 func _shoot(timeElapsed):
 	
-	var projectile = preload("res://bullet.tscn").instantiate()
+	var projectile = preload("res://bullet_kinematic.tscn").instantiate()
 	var projectileTimer = projectile.get_child(2)
 	
 	owner.add_child(projectile)
@@ -25,3 +25,4 @@ func _shoot(timeElapsed):
 	projectileTimer.start()
 	
 	projectile.transform = $Sprite2D/Muzzle.global_transform
+	projectile.scale = Vector2(3, 3)
