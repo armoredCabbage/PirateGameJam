@@ -1,6 +1,7 @@
-extends Area2D
+extends CharacterBody2D
 
 var cooldown = 1
+var seconds = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -13,7 +14,11 @@ func _process(delta):
 		cooldown -= delta
 	else:
 		cooldown = 1
-		scale *= 1.5
+		if seconds != 3:
+			seconds += 1
+			scale *= 1.5
+		else:
+			queue_free()
 
 
 func _on_timer_timeout():

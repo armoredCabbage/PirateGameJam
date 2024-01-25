@@ -1,32 +1,121 @@
-[gd_scene load_steps=11 format=3 uid="uid://dn6mystbuc8td"]
+[gd_scene load_steps=13 format=3 uid="uid://dhftox8yiun7s"]
 
-[ext_resource type="Script" path="res://levels/Scene01.gd" id="1_kft2a"]
 [ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="2_ym44g"]
-[ext_resource type="Texture2D" uid="uid://c74wns5abxyn5" path="res://art/icon.svg" id="3_bba31"]
-[ext_resource type="Script" path="res://levels/Resonate.gd" id="3_vv0xh"]
-[ext_resource type="Texture2D" uid="uid://bnjgu38r1b64h" path="res://art/TargetSprite.png" id="5_e4rs7"]
 [ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="5_harac"]
+[ext_resource type="PackedScene" uid="uid://do17jndg1w8td" path="res://target.tscn" id="7_asex1"]
 [ext_resource type="PackedScene" uid="uid://cv3eegrfmr52c" path="res://PlayerCharacterSprite.tscn" id="7_wb6iw"]
+[ext_resource type="Texture2D" uid="uid://dk4aimce22abq" path="res://art/buildings/InnBuilding.png" id="8_q30qp"]
 [ext_resource type="PackedScene" uid="uid://cbh7cdu1660ww" path="res://charge_bar.tscn" id="8_spivo"]
+[ext_resource type="Texture2D" uid="uid://bct64lcjlmr4r" path="res://art/buildings/NPCBuilding01.png" id="10_7f2pd"]
+[ext_resource type="Texture2D" uid="uid://cqyjch5bijrcp" path="res://art/cliffs/Cliff01.png" id="11_wscye"]
+[ext_resource type="Texture2D" uid="uid://b6ubfpgdm85ae" path="res://art/cliffs/Cliff02.png" id="12_rx42i"]
+[ext_resource type="PackedScene" uid="uid://dfqswtmsymp8s" path="res://Enemy.tscn" id="13_s4wv0"]
+[ext_resource type="PackedScene" uid="uid://dvtyxmrnrdnl0" path="res://collisions/Echo.tscn" id="14_nvvj4"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ijtae"]
-size = Vector2(128, 128.681)
+[sub_resource type="GDScript" id="GDScript_m3ppr"]
+script/source = "extends Node
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8p56y"]
-size = Vector2(20.8682, 20.8682)
+var time_elapsed = 0.0
+var chargeBar
+var targets
+var targetHit
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	
+	chargeBar = $ChargeBar.get_child(1)
+	$WinScreen.visible = false
+	
+	$PlayerCharacter.position = $StartPosition.position
+	$PlayerCharacterSprite.position = $StartPosition.position
+	
+	$ChargeBar.position = $ChargeBarStartPosition.position
+	
+	$Target.position = $TargetPosition.position
+	$Enemy.position = $EnemyPosition.position
+	targets = get_tree().get_nodes_in_group(\"targets\")
+	print(targets.size())
+	print(getTotalHitTargets(targets))
+	
+	$WinScreen.connect(\"goToNextLevel\", transitionToNextLevel)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_pressed(\"fire\"):
+		if time_elapsed > 2:
+			time_elapsed = 0.0
+			#$Seconds.text = \"0\"
+		
+		#$Seconds.text = str(time_elapsed)
+		time_elapsed += delta
+		
+		chargeBar.scale = Vector2(time_elapsed/2, 1)
+	if Input.is_action_just_released(\"fire\"):
+		$PlayerCharacter._shoot(time_elapsed)
+		time_elapsed = 0.0
+		#$Seconds.text = \"0\"
+		
+		chargeBar.scale = Vector2(0, 1)
+
+
+
+func _unhandled_input(event):
+	var time = get_process_delta_time()
+	var NextButton = $WinScreen/NextButton
+	
+	#if Input.is_action_pressed(\"fire\"):
+		#$Label.text = \"Charging\"
+
+
+func transitionToNextLevel():
+	get_tree().paused = false
+	get_tree().change_scene_to_file(\"res://levels/Scene03.tscn\")
+
+
+func _on_target_body_entered(body):
+	if body.is_in_group(\"projectile\"):
+		if getTotalHitTargets(targets) == targets.size():
+			winningScreen(body)
+	#print(getTotalHitTargets(targets))
+
+
+func _on_target_area_entered(area):
+	if area.is_in_group(\"resonateWave\"):
+		winningScreen(area)
+
+
+func winningScreen(object):
+	#if object.is_in_group(\"targets\"):
+		#object.queue_free()
+	get_tree().paused = true
+	$WinScreen.visible = true
+
+
+func getTotalHitTargets(targets):
+	var totalTargets = targets.size()
+	var totalHitTargets = 0
+	for target in targets:
+		if target.is_hit():
+			totalHitTargets += 1
+	
+	return totalHitTargets
+"
 
 [node name="Scene02" type="Node"]
-script = ExtResource("1_kft2a")
+script = SubResource("GDScript_m3ppr")
 
 [node name="PlayerCharacter" parent="." instance=ExtResource("2_ym44g")]
 position = Vector2(-74, -2)
 scale = Vector2(0.388099, 0.388099)
 
+[node name="PlayerCharacterSprite" parent="." instance=ExtResource("7_wb6iw")]
+
 [node name="StartPosition" type="Marker2D" parent="."]
-position = Vector2(29, 81)
+position = Vector2(57, 97)
 
 [node name="ChargeBarStartPosition" type="Marker2D" parent="."]
-position = Vector2(29, 97)
+position = Vector2(57, 113)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 35.0
@@ -42,41 +131,57 @@ offset_right = 81.0
 offset_bottom = 60.0
 scale = Vector2(1.50757, 0.597462)
 
-[node name="Resonate" type="StaticBody2D" parent="." groups=["resonates"]]
-position = Vector2(178, 6)
-scale = Vector2(0.268504, 0.469468)
-script = ExtResource("3_vv0xh")
-
-[node name="SpawnResonate" type="Marker2D" parent="Resonate"]
-position = Vector2(6.10352e-05, 83.0728)
-scale = Vector2(1.1875, 1.46875)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Resonate"]
-scale = Vector2(1.1875, 1.46875)
-shape = SubResource("RectangleShape2D_ijtae")
-
-[node name="Sprite2D" type="Sprite2D" parent="Resonate"]
-scale = Vector2(1.1875, 1.46875)
-texture = ExtResource("3_bba31")
-
-[node name="Target" type="Area2D" parent="."]
-position = Vector2(240, 67)
-scale = Vector2(0.766716, 0.766716)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Target"]
-shape = SubResource("RectangleShape2D_8p56y")
-
-[node name="Sprite2D" type="Sprite2D" parent="Target"]
-texture = ExtResource("5_e4rs7")
-
-[node name="WinScreen" parent="." instance=ExtResource("5_harac")]
-visible = false
-
-[node name="PlayerCharacterSprite" parent="." instance=ExtResource("7_wb6iw")]
-
 [node name="ChargeBar" parent="." instance=ExtResource("8_spivo")]
 scale = Vector2(0.5, 0.5)
 
-[connection signal="area_entered" from="Target" to="." method="_on_target_area_entered"]
+[node name="WinScreen" parent="." instance=ExtResource("5_harac")]
+process_mode = 2
+visible = false
+
+[node name="TargetPosition" type="Marker2D" parent="."]
+position = Vector2(266, 96)
+
+[node name="EnemyPosition" type="Marker2D" parent="."]
+position = Vector2(152, 96)
+
+[node name="Target" parent="." instance=ExtResource("7_asex1")]
+position = Vector2(23, -24)
+
+[node name="InnBuilding" type="Sprite2D" parent="."]
+position = Vector2(-10, 65)
+scale = Vector2(0.736842, 0.736842)
+texture = ExtResource("8_q30qp")
+
+[node name="NPCHouse" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(291.5, 64)
+texture = ExtResource("10_7f2pd")
+
+[node name="InnPlatform" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(9, 193)
+texture = ExtResource("11_wscye")
+
+[node name="InnPlatform2" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(285.5, 189)
+scale = Vector2(1.17442, 1)
+texture = ExtResource("12_rx42i")
+
+[node name="Enemy" parent="." instance=ExtResource("13_s4wv0")]
+position = Vector2(0, -23)
+scale = Vector2(1.01442, 1)
+
+[node name="InnPlatform3" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(154, 189)
+scale = Vector2(1.17442, 1)
+texture = ExtResource("12_rx42i")
+
+[node name="Echo2" parent="." instance=ExtResource("14_nvvj4")]
+position = Vector2(138, 1)
+
+[node name="Echo3" parent="." instance=ExtResource("14_nvvj4")]
+position = Vector2(170, 1)
+
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
-[connection signal="goToNextLevel" from="WinScreen" to="." method="_on_win_screen_go_to_next_level"]

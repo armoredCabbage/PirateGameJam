@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw2sb3apsuedr"]
+
+[ext_resource type="Texture2D" uid="uid://d0wvpl7c7qgn" path="res://art/WoodenPlatform01.png" id="1_1cytf"]
+
+[node name="WoodenPlatform01" type="Sprite2D"]
+texture = ExtResource("1_1cytf")

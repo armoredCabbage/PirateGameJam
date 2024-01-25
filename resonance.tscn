@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://do2fmmxli2j6n"]
+
+[ext_resource type="Texture2D" uid="uid://ckit5m10hoxw4" path="res://art/Bell.png" id="1_8k771"]
+[ext_resource type="Script" path="res://resonance.gd" id="1_i7d73"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8xv37"]
+radius = 9.0
+height = 24.0
+
+[node name="Resonance" type="StaticBody2D" groups=["resonates"]]
+script = ExtResource("1_i7d73")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8k771")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_8xv37")

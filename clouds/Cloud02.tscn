@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cng253s3gkjir"]
+
+[ext_resource type="Texture2D" uid="uid://crddrbyvicbl2" path="res://art/clouds/Cloud02.png" id="1_gqkfd"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pemnf"]
+radius = 8.0
+height = 34.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3jusu"]
+
+[node name="Cloud02" type="StaticBody2D" groups=["blocks"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_gqkfd")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_pemnf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_3jusu")

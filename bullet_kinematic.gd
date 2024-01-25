@@ -3,6 +3,7 @@ extends CharacterBody2D
 const SPEED = 70.0
 const JUMP_VELOCITY = -400.0
 var directionSet = true
+signal hitTarget
 
 
 func _physics_process(delta):
@@ -20,7 +21,11 @@ func _physics_process(delta):
 			velocity = velocity.bounce(collision.get_normal())
 			rotation = velocity.normalized().angle()
 		if collider.is_in_group("resonates"):
-			collider.spawnResonate()
+			collider.resonance(collider)
+		if collider.is_in_group("enemies"):
+			queue_free()
+		if collider.is_in_group("targets"):
+			emit_signal("hitTarget")
 
 
 func _on_timer_timeout():

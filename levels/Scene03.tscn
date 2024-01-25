@@ -1,0 +1,194 @@
+[gd_scene load_steps=14 format=3 uid="uid://blaayqf1e4v6s"]
+
+[ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="1_afte8"]
+[ext_resource type="PackedScene" uid="uid://cv3eegrfmr52c" path="res://PlayerCharacterSprite.tscn" id="2_1e41e"]
+[ext_resource type="PackedScene" uid="uid://cbh7cdu1660ww" path="res://charge_bar.tscn" id="3_hujl8"]
+[ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="4_e2d8r"]
+[ext_resource type="PackedScene" uid="uid://do17jndg1w8td" path="res://target.tscn" id="5_qq16d"]
+[ext_resource type="Texture2D" uid="uid://dk4aimce22abq" path="res://art/buildings/InnBuilding.png" id="6_unuaf"]
+[ext_resource type="Texture2D" uid="uid://bct64lcjlmr4r" path="res://art/buildings/NPCBuilding01.png" id="7_dyfk2"]
+[ext_resource type="Texture2D" uid="uid://cqyjch5bijrcp" path="res://art/cliffs/Cliff01.png" id="8_lolnu"]
+[ext_resource type="Texture2D" uid="uid://b6ubfpgdm85ae" path="res://art/cliffs/Cliff02.png" id="9_qoltm"]
+[ext_resource type="PackedScene" uid="uid://bw2sb3apsuedr" path="res://wooden_platform_01.tscn" id="11_a632e"]
+[ext_resource type="PackedScene" uid="uid://dvtyxmrnrdnl0" path="res://collisions/Echo.tscn" id="11_yt2x1"]
+[ext_resource type="PackedScene" uid="uid://do2fmmxli2j6n" path="res://resonance.tscn" id="13_hde7u"]
+
+[sub_resource type="GDScript" id="GDScript_m3ppr"]
+script/source = "extends Node
+
+var time_elapsed = 0.0
+var chargeBar
+var targets = []
+var targetHit = 0
+var currentLevel = 1
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	
+	chargeBar = $ChargeBar.get_child(1)
+	$WinScreen.visible = false
+	
+	$PlayerCharacter.position = $StartPosition.position
+	$PlayerCharacterSprite.position = $StartPosition.position
+	
+	$ChargeBar.position = $ChargeBarStartPosition.position
+	
+	$Target.position = $TargetPosition.position
+	$Target2.position = $TargetPosition2.position
+	#$Enemy.position = $EnemyPosition.position
+	targets = get_tree().get_nodes_in_group(\"targets\")
+	print(targets.size())
+	print(getTotalHitTargets(targets))
+	
+	$WinScreen.connect(\"goToNextLevel\", transitionToNextLevel)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_pressed(\"fire\"):
+		if time_elapsed > 2:
+			time_elapsed = 0.0
+			#$Seconds.text = \"0\"
+		
+		#$Seconds.text = str(time_elapsed)
+		time_elapsed += delta
+		
+		chargeBar.scale = Vector2(time_elapsed/2, 1)
+	if Input.is_action_just_released(\"fire\"):
+		$PlayerCharacter._shoot(time_elapsed)
+		time_elapsed = 0.0
+		#$Seconds.text = \"0\"
+		
+		chargeBar.scale = Vector2(0, 1)
+
+
+func _unhandled_input(event):
+	var time = get_process_delta_time()
+	var NextButton = $WinScreen/NextButton
+	
+	#if Input.is_action_pressed(\"fire\"):
+		#$Label.text = \"Charging\"
+
+
+func transitionToNextLevel():
+	get_tree().paused = false
+	get_tree().change_scene_to_file(\"res://levels/Level02.tscn\")
+
+
+func _on_target_body_entered(body):
+	if body.is_in_group(\"projectile\"):
+		if getTotalHitTargets(targets) == targets.size():
+			winningScreen(body)
+	print(getTotalHitTargets(targets))
+
+
+func _on_target_area_entered(area):
+	if area.is_in_group(\"projectile\"):
+		if getTotalHitTargets(targets) == targets.size():
+			winningScreen(area)
+
+
+func winningScreen(object):
+	#if object.is_in_group(\"targets\"):
+		#object.queue_free()
+	get_tree().paused = true
+	$WinScreen.visible = true
+
+
+func getTotalHitTargets(targets):
+	var totalTargets = targets.size()
+	var totalHitTargets = 0
+	for target in targets:
+		if target.is_hit():
+			totalHitTargets += 1
+	
+	return totalHitTargets
+"
+
+[node name="Scene03" type="Node"]
+script = SubResource("GDScript_m3ppr")
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("1_afte8")]
+position = Vector2(-74, -2)
+scale = Vector2(0.388099, 0.388099)
+
+[node name="PlayerCharacterSprite" parent="." instance=ExtResource("2_1e41e")]
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(55.6842, 147)
+
+[node name="ChargeBarStartPosition" type="Marker2D" parent="."]
+position = Vector2(55.6842, 163)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 35.0
+offset_top = 10.0
+offset_right = 75.0
+offset_bottom = 33.0
+scale = Vector2(2.39657, 0.766295)
+
+[node name="Seconds" type="Label" parent="."]
+offset_left = 41.0
+offset_top = 37.0
+offset_right = 81.0
+offset_bottom = 60.0
+scale = Vector2(1.50757, 0.597462)
+
+[node name="ChargeBar" parent="." instance=ExtResource("3_hujl8")]
+scale = Vector2(0.5, 0.5)
+
+[node name="WinScreen" parent="." instance=ExtResource("4_e2d8r")]
+process_mode = 2
+visible = false
+
+[node name="Echo2" parent="." instance=ExtResource("11_yt2x1")]
+position = Vector2(234, 59)
+
+[node name="Echo3" parent="." instance=ExtResource("11_yt2x1")]
+position = Vector2(267, 59)
+
+[node name="Echo4" parent="." instance=ExtResource("11_yt2x1")]
+position = Vector2(225, 26)
+
+[node name="TargetPosition" type="Marker2D" parent="."]
+position = Vector2(263, 32)
+
+[node name="TargetPosition2" type="Marker2D" parent="."]
+position = Vector2(264, 140)
+
+[node name="Target" parent="." instance=ExtResource("5_qq16d")]
+position = Vector2(92, -22)
+
+[node name="Target2" parent="." instance=ExtResource("5_qq16d")]
+position = Vector2(64, -25)
+
+[node name="InnBuilding" type="Sprite2D" parent="."]
+position = Vector2(-11.3158, 115)
+scale = Vector2(0.736842, 0.736842)
+texture = ExtResource("6_unuaf")
+
+[node name="NPCHouse" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(388, -56)
+texture = ExtResource("7_dyfk2")
+
+[node name="InnPlatform" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(7.6842, 243)
+texture = ExtResource("8_lolnu")
+
+[node name="InnPlatform2" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(262, 126)
+scale = Vector2(1.17442, 1)
+texture = ExtResource("9_qoltm")
+
+[node name="WoodenPlatform01" parent="." instance=ExtResource("11_a632e")]
+position = Vector2(263, 158)
+
+[node name="Resonance" parent="." instance=ExtResource("13_hde7u")]
+position = Vector2(263, 92)
+scale = Vector2(0.5, 0.5)
+
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
+[connection signal="body_entered" from="Target2" to="." method="_on_target_body_entered"]

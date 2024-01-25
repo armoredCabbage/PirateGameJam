@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvtyxmrnrdnl0"]
+
+[ext_resource type="Texture2D" uid="uid://b4qt4dxxilcu2" path="res://art/Echo.png" id="1_qn178"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s8yws"]
+size = Vector2(32, 32)
+
+[node name="Echo" type="StaticBody2D" groups=["echoes"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_qn178")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_s8yws")
