@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dhftox8yiun7s"]
+[gd_scene load_steps=15 format=3 uid="uid://dhftox8yiun7s"]
 
 [ext_resource type="PackedScene" uid="uid://bik34gto5kigi" path="res://PlayerCharacter.tscn" id="2_ym44g"]
 [ext_resource type="PackedScene" uid="uid://c2x6q50p71qqu" path="res://win_screen.tscn" id="5_harac"]
@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://cbh7cdu1660ww" path="res://charge_bar.tscn" id="8_spivo"]
 [ext_resource type="Texture2D" uid="uid://bct64lcjlmr4r" path="res://art/buildings/NPCBuilding01.png" id="10_7f2pd"]
 [ext_resource type="Texture2D" uid="uid://cqyjch5bijrcp" path="res://art/cliffs/Cliff01.png" id="11_wscye"]
+[ext_resource type="Texture2D" uid="uid://cbfv8g4sfrsyi" path="res://art/background/BG.png" id="12_f53pe"]
 [ext_resource type="Texture2D" uid="uid://b6ubfpgdm85ae" path="res://art/cliffs/Cliff02.png" id="12_rx42i"]
+[ext_resource type="PackedScene" uid="uid://cq52ge0bbudwi" path="res://lose_screen.tscn" id="13_4i78j"]
 [ext_resource type="PackedScene" uid="uid://dfqswtmsymp8s" path="res://Enemy.tscn" id="13_s4wv0"]
 [ext_resource type="PackedScene" uid="uid://dvtyxmrnrdnl0" path="res://collisions/Echo.tscn" id="14_nvvj4"]
 
@@ -25,6 +27,7 @@ func _ready():
 	
 	chargeBar = $ChargeBar.get_child(1)
 	$WinScreen.visible = false
+	$LoseScreen.visible = false
 	
 	$PlayerCharacter.position = $StartPosition.position
 	$PlayerCharacterSprite.position = $StartPosition.position
@@ -38,6 +41,7 @@ func _ready():
 	print(getTotalHitTargets(targets))
 	
 	$WinScreen.connect(\"goToNextLevel\", transitionToNextLevel)
+	$LoseScreen.connect(\"retryLevel\", retryCurrentLevel)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,7 +63,6 @@ func _process(delta):
 		chargeBar.scale = Vector2(0, 1)
 
 
-
 func _unhandled_input(event):
 	var time = get_process_delta_time()
 	var NextButton = $WinScreen/NextButton
@@ -71,6 +74,11 @@ func _unhandled_input(event):
 func transitionToNextLevel():
 	get_tree().paused = false
 	get_tree().change_scene_to_file(\"res://levels/Scene03.tscn\")
+
+
+func retryCurrentLevel():
+	get_tree().paused = false
+	get_tree().reload_current_scene()
 
 
 func _on_target_body_entered(body):
@@ -92,6 +100,11 @@ func winningScreen(object):
 	$WinScreen.visible = true
 
 
+func loseScreen():
+	get_tree().paused = true
+	$LoseScreen.visible = true
+
+
 func getTotalHitTargets(targets):
 	var totalTargets = targets.size()
 	var totalHitTargets = 0
@@ -100,6 +113,11 @@ func getTotalHitTargets(targets):
 			totalHitTargets += 1
 	
 	return totalHitTargets
+
+
+func _on_enemy_body_entered(body):
+	if body.is_in_group(\"projectile\"):
+		loseScreen()
 "
 
 [node name="Scene02" type="Node"]
@@ -184,4 +202,14 @@ position = Vector2(138, 1)
 [node name="Echo3" parent="." instance=ExtResource("14_nvvj4")]
 position = Vector2(170, 1)
 
+[node name="BG" type="Sprite2D" parent="."]
+z_index = -3
+position = Vector2(160, 90)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("12_f53pe")
+
+[node name="LoseScreen" parent="." instance=ExtResource("13_4i78j")]
+visible = false
+
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
+[connection signal="body_entered" from="Enemy" to="." method="_on_enemy_body_entered"]

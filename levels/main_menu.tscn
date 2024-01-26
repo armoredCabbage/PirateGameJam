@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctgflxom55tcl"]
+
+[ext_resource type="Script" path="res://main_menu.gd" id="1_8a7ut"]
+[ext_resource type="Texture2D" uid="uid://c6kxylg5y1v0j" path="res://art/StartButton.png" id="2_kw688"]
+[ext_resource type="Texture2D" uid="uid://cbfv8g4sfrsyi" path="res://art/background/BG.png" id="3_vo0jo"]
+[ext_resource type="Texture2D" uid="uid://cg8ljix4dpwec" path="res://art/QuitButton.png" id="4_o27f1"]
+[ext_resource type="Texture2D" uid="uid://dok3r8rh7g1eq" path="res://art/Logo.png" id="5_dyvc2"]
+
+[node name="MainMenu" type="Node"]
+script = ExtResource("1_8a7ut")
+
+[node name="Start" type="Sprite2D" parent="."]
+visible = false
+z_index = -1
+position = Vector2(154, 103)
+scale = Vector2(1.00525, 0.989783)
+texture = ExtResource("2_kw688")
+
+[node name="BG" type="Sprite2D" parent="."]
+z_index = -3
+position = Vector2(160, 90)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_vo0jo")
+
+[node name="Quit" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(154, 135)
+scale = Vector2(1.00525, 0.989783)
+texture = ExtResource("4_o27f1")
+
+[node name="StartButton" type="Button" parent="."]
+offset_left = 120.0
+offset_top = 92.0
+offset_right = 198.0
+offset_bottom = 126.0
+icon = ExtResource("2_kw688")
+flat = true
+
+[node name="QuitButton" type="Button" parent="."]
+offset_left = 119.0
+offset_top = 122.0
+offset_right = 197.0
+offset_bottom = 156.0
+icon = ExtResource("4_o27f1")
+flat = true
+
+[node name="Logo" type="Sprite2D" parent="."]
+position = Vector2(160, 103)
+texture = ExtResource("5_dyvc2")
+
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

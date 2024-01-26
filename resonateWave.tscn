@@ -1,16 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://cay2hq2l1qlxh"]
+[gd_scene load_steps=4 format=3 uid="uid://cay2hq2l1qlxh"]
 
 [ext_resource type="Script" path="res://resonateWave.gd" id="1_lwe8t"]
+[ext_resource type="Texture2D" uid="uid://dqai4p62kla5b" path="res://ResonanceWave.png" id="2_qfgf4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_q1xwn"]
 
 [node name="ResonateWave" type="CharacterBody2D" groups=["projectile"]]
 script = ExtResource("1_lwe8t")
 
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.52, 2.52)
+texture = ExtResource("2_qfgf4")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(3, 3)
 shape = SubResource("CircleShape2D_q1xwn")
-
-[node name="Timer" type="Timer" parent="."]
-
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

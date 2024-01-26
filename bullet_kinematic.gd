@@ -24,8 +24,8 @@ func _physics_process(delta):
 			collider.resonance(collider)
 		if collider.is_in_group("enemies"):
 			queue_free()
-		if collider.is_in_group("targets"):
-			emit_signal("hitTarget")
+		#if collider.is_in_group("targets"):
+			#emit_signal("hitTarget")
 
 
 func _on_timer_timeout():
